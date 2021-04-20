@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#ff1c272e"
-    tools:context=".HomeFragment">
+    tools:context=".HomeFragment"
+    android:layout_marginBottom="75dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -61,8 +62,7 @@
             android:id="@+id/layout_movie"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/homeTop"
-            android:layout_marginBottom="40dp">
+            android:layout_below="@+id/homeTop">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -115,14 +115,26 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </androidx.core.widget.NestedScrollView>
+                <TextView
+                    android:id="@+id/link_tmdb_from_movies"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Powered by TMDB"
+                    android:textColor="#ff156eb4"
+                    android:textAlignment="center"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Developed by Dhruv Gupta"
+                    android:textColor="#ff156eb4"
+                    android:textAlignment="center"/>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
         <androidx.core.widget.NestedScrollView
             android:id="@+id/layout_tv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/homeTop"
-            android:layout_marginBottom="40dp">
+            android:layout_below="@+id/homeTop">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -175,6 +187,19 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </androidx.core.widget.NestedScrollView>
+                <TextView
+                    android:id="@+id/link_tmdb_from_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Powered by TMDB"
+                    android:textColor="#ff156eb4"
+                    android:textAlignment="center"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Developed by Dhruv Gupta"
+                    android:textColor="#ff156eb4"
+                    android:textAlignment="center"/>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </RelativeLayout>

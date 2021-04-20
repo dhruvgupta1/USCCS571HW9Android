@@ -1,6 +1,8 @@
 package com.usccsci571dhruv.uscfilms;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -107,7 +109,9 @@ public class HomeFragment extends Fragment {
         moviesSliderView.startAutoCycle();
 
         HorizontalCardsAdapter top_rated_movies_adapter = new HorizontalCardsAdapter(movies_top);
+        top_rated_movies_adapter.AddContext(getActivity());
         HorizontalCardsAdapter popular_movies_adapter = new HorizontalCardsAdapter(movies_popular);
+        popular_movies_adapter.AddContext(getActivity());
         RecyclerView topRatedMoviesView = view.findViewById(R.id.topRatedMovies);
         RecyclerView popularMoviesView = view.findViewById(R.id.popularMovies);
         topRatedMoviesView.setNestedScrollingEnabled(false);
@@ -125,7 +129,9 @@ public class HomeFragment extends Fragment {
         tvSliderView.startAutoCycle();
 
         HorizontalCardsAdapter top_rated_tv_adapter = new HorizontalCardsAdapter(tv_top);
+        top_rated_tv_adapter.AddContext(getActivity());
         HorizontalCardsAdapter popular_tv_adapter = new HorizontalCardsAdapter(tv_popular);
+        popular_tv_adapter.AddContext(getActivity());
         RecyclerView topRatedTvView = view.findViewById(R.id.topRatedTV);
         RecyclerView popularTvView = view.findViewById(R.id.popularTV);
         topRatedTvView.setNestedScrollingEnabled(false);
@@ -135,5 +141,13 @@ public class HomeFragment extends Fragment {
         popularTvView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
         popularTvView.setAdapter(popular_tv_adapter);
 
+        TextView tmdb_link_movies = view.findViewById(R.id.link_tmdb_from_movies);
+        TextView tmdb_link_tv = view.findViewById(R.id.link_tmdb_from_tv);
+        View.OnClickListener tmdb_link_click = v -> {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.themoviedb.org/"));
+            startActivity(browserIntent);
+        };
+        tmdb_link_movies.setOnClickListener(tmdb_link_click);
+        tmdb_link_tv.setOnClickListener(tmdb_link_click);
     }
 }

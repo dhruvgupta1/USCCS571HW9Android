@@ -1,14 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".WatchlistFragment">
+    tools:context=".WatchlistFragment"
+    android:background="@color/colorPrimary"
+    android:layout_marginBottom="50dp">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/watchlist_nothing_saved"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textColor="@color/white"
+        android:text="Nothing saved to Watchlist"
+        android:visibility="gone"/>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="4dp">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/watchlist_rv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </androidx.core.widget.NestedScrollView>
 
-</FrameLayout>
+</RelativeLayout>
