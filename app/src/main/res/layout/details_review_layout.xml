@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorPrimary">
+    <LinearLayout
+        android:id="@+id/details_review_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="10dp">
+
+        <TextView
+            android:id="@+id/details_review_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="by Username on Date"
+            android:textColor="@color/appBlue"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-black"/>
+        <TextView
+            android:id="@+id/details_review_stars"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="X/5"
+            android:textColor="@color/white"
+            android:drawableRight="@drawable/ic_baseline_star_rate_24"/>
+        <TextView
+            android:id="@+id/details_review_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Content"
+            android:textColor="@color/white"
+            android:ellipsize="end"
+            android:maxLines="3"/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:background="#1c2e41"
+        android:layout_gravity="bottom"/>
+</FrameLayout>

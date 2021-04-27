@@ -18,6 +18,8 @@ import java.util.ArrayList;
 
 public class WatchlistFragment extends Fragment {
 
+    private View view;
+
     public WatchlistFragment() {
 
     }
@@ -38,6 +40,11 @@ public class WatchlistFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        this.view = view;
+        createView();
+    }
+
+    public void createView() {
         watchlistHandler handler = new watchlistHandler(getActivity());
         ArrayList<watchlistItem> dataSet = handler.get();
 

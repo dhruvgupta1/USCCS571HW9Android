@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ReviewActivity"
+    android:background="@color/colorPrimary">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="10dp">
+        <TextView
+            android:id="@+id/activity_review_stars"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="X/5"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:drawableRight="@drawable/ic_baseline_star_rate_24"/>
+        <TextView
+            android:id="@+id/activity_review_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="by Username on Date"
+            android:textColor="@color/appBlue"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-black"/>
+        <TextView
+            android:id="@+id/activity_review_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Content"
+            android:textColor="@color/white"
+            android:textSize="16dp"
+            android:layout_marginTop="20dp"/>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

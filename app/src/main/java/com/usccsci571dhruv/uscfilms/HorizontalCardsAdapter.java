@@ -1,12 +1,9 @@
 package com.usccsci571dhruv.uscfilms;
 
 import android.app.Activity;
-import android.app.ActivityManager;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -22,14 +19,16 @@ import java.util.ArrayList;
 
 public class HorizontalCardsAdapter extends RecyclerView.Adapter<HorizontalCardsAdapter.ViewHolder> {
 
-    private Activity activityContext;
+    private Activity activity;
     private ArrayList<ListMediaEntry> mData;
+    private boolean isForRecommended;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
 
         public final View itemView;
         public final ImageView img;
+        public final ImageView gradient;
         public final ImageView options;
 
         public ViewHolder(@NonNull View itemView) {
@@ -37,15 +36,19 @@ public class HorizontalCardsAdapter extends RecyclerView.Adapter<HorizontalCards
 
             this.itemView = itemView;
             this.img = itemView.findViewById(R.id.home_card_img);
+            this.gradient = itemView.findViewById(R.id.home_card_gradient);
             this.options = itemView.findViewById(R.id.home_card_options);
         }
     }
 
-    public HorizontalCardsAdapter(ArrayList<ListMediaEntry> dataSet) {
-        mData = dataSet;
+    public HorizontalCardsAdapter(Activity activity, ArrayList<ListMediaEntry> dataSet) {
+        this.activity = activity;
+        this.mData = dataSet;
+        isForRecommended = false;
     }
-    public void AddContext(@NonNull Activity ctx) {
-        this.activityContext = ctx;
+
+    public void setForRecommended(boolean forRecommended) {
+        isForRecommended = forRecommended;
     }
 
     @NonNull
@@ -59,6 +62,10 @@ public class HorizontalCardsAdapter extends RecyclerView.Adapter<HorizontalCards
 
     @Override
     public void onBindViewHolder(@NonNull HorizontalCardsAdapter.ViewHolder holder, int position) {
+        if(isForRecommended) {
+            holder.gradient.setVisibility(View.GONE);
+            holder.options.setVisibility(View.GONE);
+        }
         ListMediaEntry ent = mData.get(position);
 
         Glide.with(holder.itemView)
@@ -66,13 +73,20 @@ public class HorizontalCardsAdapter extends RecyclerView.Adapter<HorizontalCards
                 .fitCenter()
                 .into(holder.img);
 
+        holder.img.setOnClickListener(v -> {
+            Intent intent = new Intent(activity, DetailsActivity.class);
+            intent.putExtra("media_type", ent.media_type);
+            intent.putExtra("media_id", ent.id);
+            activity.startActivity(intent);
+        });
+
         holder.options.setOnClickListener(v -> {
             PopupMenu menu = new PopupMenu(holder.itemView.getContext(),holder.options);
             menu.getMenu().add("Open in TMDB");
             menu.getMenu().add("Share on Facebook");
             menu.getMenu().add("Share on Twitter");
 
-            watchlistHandler watchlist = new watchlistHandler(activityContext);
+            watchlistHandler watchlist = new watchlistHandler(activity);
             watchlistItem witem = new watchlistItem(ent.media_type,
                     ent.id,
                     ent.poster_path,
@@ -88,15 +102,27 @@ public class HorizontalCardsAdapter extends RecyclerView.Adapter<HorizontalCards
                 if(item.getTitle().equals("Open in TMDB")) {
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW,
                             Uri.parse("https://www.themoviedb.org/" + ent.media_type + "/" + ent.id));
-                    activityContext.startActivity(browserIntent);
+                    activity.startActivity(browserIntent);
                 }
                 if(item.getTitle().equals("Add to Watchlist")) {
                     watchlist.add(witem);
-                    Toast.makeText(activityContext, witem.name + " was added to Watchlist", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, witem.name + " was added to Watchlist", Toast.LENGTH_SHORT).show();
                 }
                 if(item.getTitle().equals("Remove from Watchlist")) {
                     watchlist.remove(witem);
-                    Toast.makeText(activityContext, witem.name + " was removed from Watchlist", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, witem.name + " was removed from Watchlist", Toast.LENGTH_SHORT).show();
+                }
+                if(item.getTitle().equals("Share on Facebook")) {
+                    String link = "https://www.facebook.com/sharer/sharer.php?u=https://www.themoviedb.org/" + ent.media_type +"/" + ent.id;
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                            Uri.parse(link));
+                    activity.startActivity(browserIntent);
+                }
+                if(item.getTitle().equals("Share on Twitter")) {
+                    String link = "https://twitter.com/intent/tweet?text=Check this out! https://www.themoviedb.org/" + ent.media_type +"/" + ent.id;
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                            Uri.parse(link));
+                    activity.startActivity(browserIntent);
                 }
                 return true;
             });

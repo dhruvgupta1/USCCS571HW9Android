@@ -1,6 +1,7 @@
 package com.usccsci571dhruv.uscfilms;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -94,19 +96,23 @@ public class WatchlistCardAdapter extends RecyclerView.Adapter<WatchlistCardAdap
         if(item.media_type.equalsIgnoreCase("movie")) media = "Movie";
         holder.media.setText(media);
 
-        holder.removeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                watchlistHandler handler = new watchlistHandler(activity);
-                handler.remove(item);
-                mData.remove(position);
-                notifyDataSetChanged();
-                TextView no_results = activity.findViewById(R.id.watchlist_nothing_saved);
-                if(mData.size() == 0) no_results.setVisibility(View.VISIBLE);
-                else no_results.setVisibility(View.GONE);
+        holder.removeBtn.setOnClickListener(v -> {
+            watchlistHandler handler = new watchlistHandler(activity);
+            handler.remove(item);
+            mData.remove(position);
+            notifyDataSetChanged();
+            TextView no_results = activity.findViewById(R.id.watchlist_nothing_saved);
+            if(mData.size() == 0) no_results.setVisibility(View.VISIBLE);
+            else no_results.setVisibility(View.GONE);
 
-                Toast.makeText(activity, item.name + " was removed from Watchlist", Toast.LENGTH_SHORT).show();
-            }
+            Toast.makeText(activity, item.name + " was removed from Watchlist", Toast.LENGTH_SHORT).show();
+        });
+
+        holder.img.setOnClickListener(v -> {
+            Intent intent = new Intent(activity, DetailsActivity.class);
+            intent.putExtra("media_type", item.media_type);
+            intent.putExtra("media_id", item.id);
+            activity.startActivity(intent);
         });
     }
 

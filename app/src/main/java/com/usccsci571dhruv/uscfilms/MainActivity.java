@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean mLoaded;
     private int mCurrentFrag;
-    Lock _mLock = new ReentrantLock(true);
+    private Lock _mLock = new ReentrantLock(true);
     private int data_points_loaded;
 
     ArrayList<ListMediaEntry> movies_new;
@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.Theme_USCFilms);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -50,6 +51,14 @@ public class MainActivity extends AppCompatActivity {
         // Set Fragment to home fragment
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new LoadingScreenFragment()).commit();
         fetchData();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(frag_watchlist != null && mCurrentFrag == 3) {
+            frag_watchlist.createView();
+        }
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = item -> {
@@ -177,18 +186,19 @@ public class MainActivity extends AppCompatActivity {
     private void markLoaded() {
         _mLock.lock();
         data_points_loaded++;
-        _mLock.unlock();
         if (data_points_loaded == 6) {
             frag_home = HomeFragment.newInstance(movies_new,
                     movies_top,
                     movies_popular,
                     tv_trending,
                     tv_top,
-                    tv_popular);
+                    tv_popular,
+                    0);
             frag_search = new SearchFragment();
             frag_watchlist = new WatchlistFragment();
             mLoaded = true;
         }
+        _mLock.unlock();
         if (mLoaded) {
             LoadCurrentFragment();
         }

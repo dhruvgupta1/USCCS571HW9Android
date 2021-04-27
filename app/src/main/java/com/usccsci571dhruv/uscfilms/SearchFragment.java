@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,8 +31,13 @@ import java.util.ArrayList;
 
 public class SearchFragment extends Fragment {
 
+    private RequestQueue requestQueue;
+    private String currentQuery;
+
     public SearchFragment() {
         // Required empty public constructor
+        requestQueue = null;
+        currentQuery = "";
     }
 
     @Override
@@ -93,23 +100,35 @@ public class SearchFragment extends Fragment {
 
     private void makeRequest(View view, String query) {
 
-        query = query.trim();
-        if(query.length() == 0) {
-            SearchResultAdapter adapter = new SearchResultAdapter(new ArrayList<>());
+        if(requestQueue == null) requestQueue = Volley.newRequestQueue(view.getContext());
+        else requestQueue.cancelAll(Request::hasHadResponseDelivered);
+
+        //Empty current view
+        {
+            SearchResultAdapter adapter = new SearchResultAdapter(getActivity(), new ArrayList<>());
             RecyclerView recyclerView = view.findViewById(R.id.search_results);
             recyclerView.setNestedScrollingEnabled(false);
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),
                     RecyclerView.VERTICAL,
                     false));
             recyclerView.setAdapter(adapter);
+        }
+
+        //Check if query is empty
+        query = query.trim();
+        currentQuery = query;
+        if(query.length() == 0) {
             return;
         }
-        RequestQueue requestQueue = Volley.newRequestQueue(view.getContext());
 
+        String finalQuery = query;
         StringRequest req = new StringRequest(Request.Method.GET,
                 view.getResources()
                         .getString(R.string.api_base_url) + "multi_search/query=" + query,
                 response -> {
+                    if(!finalQuery.equalsIgnoreCase(currentQuery)) {
+                        return;
+                    }
                     ArrayList<SearchResultEntry> resultEntries = responseToArray(response);
                     if(resultEntries.size() == 0) {
                         View toRemove = view.findViewById(R.id.search_result_holder);
@@ -130,16 +149,15 @@ public class SearchFragment extends Fragment {
                     if(toShow.getVisibility() != View.VISIBLE) {
                         toShow.setVisibility(View.VISIBLE);
                     }
-                    SearchResultAdapter adapter = new SearchResultAdapter(resultEntries);
+                    SearchResultAdapter adapter = new SearchResultAdapter(getActivity(), resultEntries);
                     RecyclerView recyclerView = view.findViewById(R.id.search_results);
                     recyclerView.setNestedScrollingEnabled(false);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),
                             RecyclerView.VERTICAL,
                             false));
                     recyclerView.setAdapter(adapter);
-                }, error -> {
-            error.printStackTrace();
-        });
+                }, error -> error.printStackTrace());
         requestQueue.add(req);
+
     }
 }

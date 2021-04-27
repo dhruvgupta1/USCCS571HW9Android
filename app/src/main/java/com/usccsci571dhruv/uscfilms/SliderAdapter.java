@@ -1,6 +1,8 @@
 package com.usccsci571dhruv.uscfilms;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +20,11 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
 public class SliderAdapter extends SliderViewAdapter<SliderAdapter.SliderAdapterViewHolder> {
 
     private final List<ListMediaEntry> mSliderItems;
+    private final Activity activity;
 
-    public SliderAdapter(Context context, ArrayList<ListMediaEntry> sliderDataArrayList) {
+    public SliderAdapter(Activity activity, ArrayList<ListMediaEntry> sliderDataArrayList) {
         this.mSliderItems = sliderDataArrayList;
+        this.activity = activity;
     }
     @Override
     public SliderAdapter.SliderAdapterViewHolder onCreateViewHolder(ViewGroup parent) {
@@ -40,6 +44,15 @@ public class SliderAdapter extends SliderViewAdapter<SliderAdapter.SliderAdapter
                 .load(sliderItem.poster_path)
                 .fitCenter()
                 .into(viewHolder.mainPoster);
+
+        View.OnClickListener listener = v -> {
+            Intent intent = new Intent(activity, DetailsActivity.class);
+            intent.putExtra("media_type", sliderItem.media_type);
+            intent.putExtra("media_id", sliderItem.id);
+            activity.startActivity(intent);
+        };
+        viewHolder.blurredBackground.setOnClickListener(listener);
+        viewHolder.mainPoster.setOnClickListener(listener);
     }
 
     @Override

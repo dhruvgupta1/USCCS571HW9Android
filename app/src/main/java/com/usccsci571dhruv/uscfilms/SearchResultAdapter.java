@@ -1,9 +1,7 @@
 package com.usccsci571dhruv.uscfilms;
 
-import android.graphics.Color;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
+import android.app.Activity;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -20,6 +19,7 @@ import java.util.ArrayList;
 public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.ViewHolder> {
 
     private ArrayList<SearchResultEntry> mData;
+    private Activity activity;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public final View itemView;
@@ -27,6 +27,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
         public final TextView mediaTypeAndYear;
         public final TextView title;
         public final TextView stars;
+        public final CardView cardView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -35,11 +36,13 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
             this.mediaTypeAndYear = itemView.findViewById(R.id.sCardMediaType);
             this.title = itemView.findViewById(R.id.sCardTitle);
             this.stars = itemView.findViewById(R.id.sCardStars);
+            this.cardView = itemView.findViewById(R.id.sCardView);
         }
     }
 
-    public SearchResultAdapter(ArrayList<SearchResultEntry> dataSet) {
-        mData = dataSet;
+    public SearchResultAdapter(Activity activity, ArrayList<SearchResultEntry> dataSet) {
+        this.activity = activity;
+        this.mData = dataSet;
     }
 
     @NonNull
@@ -60,19 +63,21 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
                 .into(holder.img);
 
         String media_type_and_year = "";
-        if(ent.media_type == "movie") media_type_and_year = "movie";
-        if(ent.media_type == "tv") media_type_and_year = "tv show";
+        if(ent.media_type.equalsIgnoreCase("movie")) media_type_and_year = "movie";
+        if(ent.media_type.equalsIgnoreCase("tv")) media_type_and_year = "tv show";
         media_type_and_year += " (" + ent.year + ")";
         holder.mediaTypeAndYear.setText(media_type_and_year);
 
         holder.title.setText(ent.name);
 
-        Spannable starString = new SpannableString(
-                holder.itemView.getResources().getString(R.string.star) + " " + ent.stars);
-        starString.setSpan(new ForegroundColorSpan(Color.parseColor("#e6c70a")),
-                0,1,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        holder.stars.setText(starString);
+        holder.stars.setText(ent.stars);
+
+        holder.cardView.setOnClickListener(v -> {
+            Intent intent = new Intent(activity, DetailsActivity.class);
+            intent.putExtra("media_type", ent.media_type);
+            intent.putExtra("media_id", ent.id);
+            activity.startActivity(intent);
+        });
     }
 
     @Override

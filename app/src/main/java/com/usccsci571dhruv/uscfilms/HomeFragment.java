@@ -43,7 +43,8 @@ public class HomeFragment extends Fragment {
             ArrayList<ListMediaEntry> im_pop,
             ArrayList<ListMediaEntry> it_trend,
             ArrayList<ListMediaEntry> it_top,
-            ArrayList<ListMediaEntry> it_pop
+            ArrayList<ListMediaEntry> it_pop,
+            int starting_tab
     ) {
         
         Bundle args = new Bundle();
@@ -55,13 +56,13 @@ public class HomeFragment extends Fragment {
         fragment.tv_trending = it_trend;
         fragment.tv_top = it_top;
         fragment.tv_popular = it_pop;
+        fragment.current_tab = starting_tab;
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        current_tab = 0;
     }
 
     @Override
@@ -95,23 +96,33 @@ public class HomeFragment extends Fragment {
             layout_tv.setVisibility(View.VISIBLE);
             layout_movie.setVisibility(View.GONE);
         });
-        current_tab = 0;
-        movie_tab.setTextColor(Color.parseColor("#ffffffff"));
-        tv_tab.setTextColor(Color.parseColor("#ff156eb4"));
-        layout_tv.setVisibility(View.GONE);
-        layout_movie.setVisibility(View.VISIBLE);
+//        current_tab = 0;
+//        movie_tab.setTextColor(Color.parseColor("#ffffffff"));
+//        tv_tab.setTextColor(Color.parseColor("#ff156eb4"));
+//        layout_tv.setVisibility(View.GONE);
+//        layout_movie.setVisibility(View.VISIBLE);
+        if(current_tab == 0) {
+            movie_tab.setTextColor(Color.parseColor("#ffffffff"));
+            tv_tab.setTextColor(Color.parseColor("#ff156eb4"));
+            layout_tv.setVisibility(View.GONE);
+            layout_movie.setVisibility(View.VISIBLE);
+        }
+        else {
+            movie_tab.setTextColor(Color.parseColor("#ff156eb4"));
+            tv_tab.setTextColor(Color.parseColor("#ffffffff"));
+            layout_tv.setVisibility(View.VISIBLE);
+            layout_movie.setVisibility(View.GONE);
+        }
 
         SliderView moviesSliderView = view.findViewById(R.id.movieSlider);
         SliderAdapter movies_slider_adapter = new SliderAdapter(getActivity(), movies_new);
         moviesSliderView.setSliderAdapter(movies_slider_adapter);
-        moviesSliderView.setScrollTimeInSec(3);
+        moviesSliderView.setScrollTimeInSec(1);
         moviesSliderView.setAutoCycle(true);
         moviesSliderView.startAutoCycle();
 
-        HorizontalCardsAdapter top_rated_movies_adapter = new HorizontalCardsAdapter(movies_top);
-        top_rated_movies_adapter.AddContext(getActivity());
-        HorizontalCardsAdapter popular_movies_adapter = new HorizontalCardsAdapter(movies_popular);
-        popular_movies_adapter.AddContext(getActivity());
+        HorizontalCardsAdapter top_rated_movies_adapter = new HorizontalCardsAdapter(getActivity(),movies_top);
+        HorizontalCardsAdapter popular_movies_adapter = new HorizontalCardsAdapter(getActivity(),movies_popular);
         RecyclerView topRatedMoviesView = view.findViewById(R.id.topRatedMovies);
         RecyclerView popularMoviesView = view.findViewById(R.id.popularMovies);
         topRatedMoviesView.setNestedScrollingEnabled(false);
@@ -124,14 +135,12 @@ public class HomeFragment extends Fragment {
         SliderView tvSliderView = view.findViewById(R.id.tvSlider);
         SliderAdapter tv_slider_adapter = new SliderAdapter(getActivity(), tv_trending);
         tvSliderView.setSliderAdapter(tv_slider_adapter);
-        tvSliderView.setScrollTimeInSec(3);
+        tvSliderView.setScrollTimeInSec(1);
         tvSliderView.setAutoCycle(true);
         tvSliderView.startAutoCycle();
 
-        HorizontalCardsAdapter top_rated_tv_adapter = new HorizontalCardsAdapter(tv_top);
-        top_rated_tv_adapter.AddContext(getActivity());
-        HorizontalCardsAdapter popular_tv_adapter = new HorizontalCardsAdapter(tv_popular);
-        popular_tv_adapter.AddContext(getActivity());
+        HorizontalCardsAdapter top_rated_tv_adapter = new HorizontalCardsAdapter(getActivity(),tv_top);
+        HorizontalCardsAdapter popular_tv_adapter = new HorizontalCardsAdapter(getActivity(),tv_popular);
         RecyclerView topRatedTvView = view.findViewById(R.id.topRatedTV);
         RecyclerView popularTvView = view.findViewById(R.id.popularTV);
         topRatedTvView.setNestedScrollingEnabled(false);
